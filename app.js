@@ -26,10 +26,24 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.json());
 app.use("/static", express.static(path.join(__dirname, "public")));
 
-app.get("/", (rea, res) => {
-  res.render("index", {
-    body: "body 부분입니다",
+// app.get("/", (rea, res) => {
+//   throw new Error("it is an error");
+//   // res.render("index", {
+//   //   body: "body 부분입니다",
+//   // });
+// });
+
+app.get("/", (rea, res, next) => {
+  setImmediate(() => {
+    next(new Error("it is an error"));
   });
+  // res.render("index", {
+  //   body: "body 부분입니다",
+  // });
+});
+
+app.use((error, req, res, next) => {
+  res.json({ message: error.message });
 });
 
 app.use((req, res, next) => {
